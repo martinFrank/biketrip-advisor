@@ -18,23 +18,27 @@ public class PipelineOrchestrator {
     private final ReasoningAgent reasoningAgent;
     private final PlanningAgent planningAgent;
     private final LanguageAgent languageAgent;
+    private final GeoRoutingService geoRoutingService;
 
     public PipelineOrchestrator(ChatAgent chatAgent,
                                  ReasoningAgent reasoningAgent,
                                  PlanningAgent planningAgent,
-                                 LanguageAgent languageAgent) {
+                                 LanguageAgent languageAgent,
+                                 GeoRoutingService geoRoutingService) {
         this.chatAgent = chatAgent;
         this.reasoningAgent = reasoningAgent;
         this.planningAgent = planningAgent;
         this.languageAgent = languageAgent;
+        this.geoRoutingService = geoRoutingService;
     }
 
     public PipelineResult execute(String userMessage, Map<String, String> modelOverrides) {
-        return execute(userMessage, modelOverrides, step -> {});
+        return execute(userMessage, modelOverrides, step -> {}, route -> {});
     }
 
     public PipelineResult execute(String userMessage, Map<String, String> modelOverrides,
-                                   Consumer<AgentStepResult> onStepComplete) {
+                                   Consumer<AgentStepResult> onStepComplete,
+                                   Consumer<RouteResult> onRouteReady) {
         log.info("Pipeline: starting for message: {}", userMessage);
         List<AgentStepResult> steps = new ArrayList<>();
 
@@ -53,13 +57,24 @@ public class PipelineOrchestrator {
         steps.add(planResult);
         onStepComplete.accept(planResult);
 
+        // Stage 3.5: Geo-Routing (between Planning and Language)
+        RouteResult route = null;
+        try {
+            route = geoRoutingService.process(planResult.output());
+            if (route != null) {
+                onRouteReady.accept(route);
+            }
+        } catch (Exception e) {
+            log.warn("Geo-routing failed, continuing without route: {}", e.getMessage());
+        }
+
         // Stage 4: Language
         AgentStepResult langResult = languageAgent.process(planResult.output(), getOverride(modelOverrides, "LANGUAGE"));
         steps.add(langResult);
         onStepComplete.accept(langResult);
 
-        log.info("Pipeline: completed all 4 stages");
-        return new PipelineResult(steps, langResult.output());
+        log.info("Pipeline: completed all stages");
+        return new PipelineResult(steps, langResult.output(), route);
     }
 
     private String getOverride(Map<String, String> overrides, String role) {

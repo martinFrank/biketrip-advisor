@@ -3,6 +3,7 @@ import { TripRequestForm } from './components/input/TripRequestForm';
 import { ModelSelector } from './components/input/ModelSelector';
 import { PipelineView } from './components/pipeline/PipelineView';
 import { FinalReport } from './components/output/FinalReport';
+import { RouteMap } from './components/output/RouteMap';
 import { usePipeline } from './hooks/usePipeline';
 
 function App() {
@@ -61,6 +62,12 @@ function App() {
               )}
             </div>
             <PipelineView state={state} />
+          </section>
+        )}
+
+        {state.route && (
+          <section>
+            <RouteMap route={state.route} />
           </section>
         )}
 

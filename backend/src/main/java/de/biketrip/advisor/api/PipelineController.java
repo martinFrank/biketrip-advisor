@@ -55,6 +55,14 @@ public class PipelineController {
                     } catch (Exception e) {
                         log.error("Error sending SSE event", e);
                     }
+                }, route -> {
+                    try {
+                        emitter.send(SseEmitter.event()
+                                .name("route-ready")
+                                .data(objectMapper.writeValueAsString(route), MediaType.APPLICATION_JSON));
+                    } catch (Exception e) {
+                        log.error("Error sending route SSE event", e);
+                    }
                 });
                 emitter.send(SseEmitter.event().name("pipeline-complete").data("done"));
                 emitter.complete();
