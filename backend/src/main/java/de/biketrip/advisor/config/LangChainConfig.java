@@ -12,22 +12,22 @@ public class LangChainConfig {
 
     @Bean("chatLlm")
     public ChatLanguageModel chatLlm(OllamaModelsConfig cfg) {
-        return buildModel(cfg.baseUrl(), cfg.chatModel(), 0.7);
+        return buildModel(cfg.baseUrl(), cfg.chatModel(), cfg.chatTemperature());
     }
 
     @Bean("reasoningLlm")
     public ChatLanguageModel reasoningLlm(OllamaModelsConfig cfg) {
-        return buildModel(cfg.baseUrl(), cfg.reasoningModel(), 0.2);
+        return buildModel(cfg.baseUrl(), cfg.reasoningModel(), cfg.reasoningTemperature());
     }
 
     @Bean("planningLlm")
     public ChatLanguageModel planningLlm(OllamaModelsConfig cfg) {
-        return buildModel(cfg.baseUrl(), cfg.planningModel(), 0.4);
+        return buildModel(cfg.baseUrl(), cfg.planningModel(), cfg.planningTemperature());
     }
 
     @Bean("languageLlm")
     public ChatLanguageModel languageLlm(OllamaModelsConfig cfg) {
-        return buildModel(cfg.baseUrl(), cfg.languageModel(), 0.8);
+        return buildModel(cfg.baseUrl(), cfg.languageModel(), cfg.languageTemperature());
     }
 
     public static ChatLanguageModel buildModel(String baseUrl, String modelName, double temperature) {

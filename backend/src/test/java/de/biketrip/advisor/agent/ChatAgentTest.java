@@ -22,7 +22,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ChatAgentTest {
@@ -41,7 +42,8 @@ class ChatAgentTest {
     @BeforeEach
     void setUp() {
         OllamaModelsConfig config = new OllamaModelsConfig(
-                "http://localhost:11434", "mistral", "deepseek-r1:8b", "qwen2.5:7b", "llama3.1:8b");
+                "http://localhost:11434", "mistral", 0.7,
+                "deepseek-r1:8b", 0.2, "qwen2.5:7b", 0.4, "llama3.1:8b", 0.8);
         chatAgent = new ChatAgent(model, contentRetriever, config);
     }
 
@@ -93,20 +95,17 @@ class ChatAgentTest {
     }
 
     @Test
-    void processWithModelOverrideReportsOverriddenModelName() {
+    void processReportsDefaultModelName() {
         when(contentRetriever.retrieve(any())).thenReturn(List.of());
         when(model.generate(any(ChatMessage.class), any(ChatMessage.class)))
                 .thenReturn(new Response<>(new AiMessage("Antwort")));
 
-        // With override, the agent builds a new model via LangChainConfig.buildModel,
-        // but since we can't mock static, we test that modelUsed reflects the override name.
-        // The actual model call would fail without Ollama, so we test without override here.
         AgentStepResult result = chatAgent.process("Test", null);
         assertThat(result.modelUsed()).isEqualTo("mistral");
     }
 
     @Test
-    void systemPromptContainsGermanInstructions() {
+    void systemPromptIsLoadedFromResourceFile() {
         when(contentRetriever.retrieve(any())).thenReturn(List.of());
         when(model.generate(any(ChatMessage.class), any(ChatMessage.class)))
                 .thenReturn(new Response<>(new AiMessage("ok")));
@@ -117,5 +116,11 @@ class ChatAgentTest {
         String systemPrompt = ((SystemMessage) messageCaptor.getAllValues().get(0)).text();
         assertThat(systemPrompt).contains("Fahrradtouren-Berater");
         assertThat(systemPrompt).contains("Start- und Zielort");
+    }
+
+    @Test
+    void implementsPipelineAgentInterface() {
+        assertThat(chatAgent).isInstanceOf(PipelineAgent.class);
+        assertThat(chatAgent.getRole()).isEqualTo(AgentRole.CHAT);
     }
 }

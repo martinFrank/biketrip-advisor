@@ -6,7 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record OllamaModelsConfig(
         String baseUrl,
         String chatModel,
+        double chatTemperature,
         String reasoningModel,
+        double reasoningTemperature,
         String planningModel,
-        String languageModel
+        double planningTemperature,
+        String languageModel,
+        double languageTemperature
 ) {}

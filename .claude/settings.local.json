@@ -21,7 +21,10 @@
       "Bash(where.exe mvn *)",
       "Bash(\"/c/Users/m.frank/work/apache-maven-3.9.6-bin/apache-maven-3.9.6/bin/mvn\" test:*)",
       "Bash(java *)",
-      "Bash(\"/c/Users/m.frank/work/apache-maven-3.9.6-bin/apache-maven-3.9.6/bin/mvn\" -version)"
+      "Bash(\"/c/Users/m.frank/work/apache-maven-3.9.6-bin/apache-maven-3.9.6/bin/mvn\" -version)",
+      "Bash(find /c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/frontend -type f -name *.ts -o -name *.tsx -o -name *.json -o -name Dockerfile -o -name *.conf -o -name .env*)",
+      "Bash(npx vitest:*)",
+      "Bash(grep -E \"\\\\.\\(json|js|ts|tsx|css\\)$\")"
     ]
   }
 }

@@ -37,7 +37,6 @@ export type PipelineStatus = 'idle' | 'running' | 'complete' | 'error';
 export interface PipelineState {
   status: PipelineStatus;
   steps: AgentStepResult[];
-  currentStep: number;
   route: RouteResult | null;
   error: string | null;
 }
