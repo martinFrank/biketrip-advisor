@@ -76,4 +76,11 @@ All backend endpoints live under the context path `/biketrip-advisor/` (e.g. `/b
 - **Docker**: no env var needed, defaults to `/biketrip-advisor/api` (proxied through Nginx to backend container)
 
 ### Model Configuration
-Configured in `backend/src/main/resources/application.yml` under `biketrip.ollama.*`. Each agent role maps to a model name. The frontend can override these per request. In Docker, the Ollama base URL is overridden via `BIKETRIP_OLLAMA_BASE_URL` environment variable.
+Default models are in `backend/src/main/resources/application.yml` under `biketrip.ollama.*`. All values are overridable via environment variables in the project root `.env` file (used by docker-compose):
+- `BIKETRIP_OLLAMA_BASE_URL` — Ollama server URL
+- `BIKETRIP_OLLAMA_CHAT_MODEL` — Chat+RAG agent model (default: `mistral`)
+- `BIKETRIP_OLLAMA_REASONING_MODEL` — Reasoning agent model (default: `deepseek-r1:8b`)
+- `BIKETRIP_OLLAMA_PLANNING_MODEL` — Planning agent model (default: `qwen2.5:7b`)
+- `BIKETRIP_OLLAMA_LANGUAGE_MODEL` — Language agent model (default: `llama3.1:8b`)
+
+The frontend can additionally override models per request via the ModelSelector dropdowns.
