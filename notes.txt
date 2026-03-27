@@ -1,0 +1,6 @@
+Zum Aktivieren der Routenberechnung
+
+  1. Kostenlosen API-Key holen: https://openrouteservice.org/dev/#/signup
+  2. In .env eintragen: OPENROUTESERVICE_API_KEY=dein-key
+
+  
