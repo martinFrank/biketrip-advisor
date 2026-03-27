@@ -4,5 +4,6 @@ import java.util.List;
 
 public record PipelineResult(
         List<AgentStepResult> steps,
-        String finalReport
+        String finalReport,
+        RouteResult route
 ) {}

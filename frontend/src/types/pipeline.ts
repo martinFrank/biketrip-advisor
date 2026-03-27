@@ -8,9 +8,23 @@ export interface AgentStepResult {
   durationMs: number;
 }
 
+export interface RouteWaypoint {
+  name: string;
+  lat: number;
+  lon: number;
+  dayNumber: number;
+}
+
+export interface RouteResult {
+  waypoints: RouteWaypoint[];
+  geojson: GeoJSON.GeoJsonObject | null;
+  totalDistanceKm: number;
+}
+
 export interface PipelineResult {
   steps: AgentStepResult[];
   finalReport: string;
+  route: RouteResult | null;
 }
 
 export interface PipelineRequest {
@@ -24,6 +38,7 @@ export interface PipelineState {
   status: PipelineStatus;
   steps: AgentStepResult[];
   currentStep: number;
+  route: RouteResult | null;
   error: string | null;
 }
 

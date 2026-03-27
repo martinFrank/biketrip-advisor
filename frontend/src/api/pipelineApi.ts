@@ -1,10 +1,11 @@
-import type { AgentStepResult, PipelineRequest } from '../types/pipeline';
+import type { AgentStepResult, PipelineRequest, RouteResult } from '../types/pipeline';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/biketrip-advisor/api';
 
 export async function startPipelineStream(
   request: PipelineRequest,
   onStep: (step: AgentStepResult) => void,
+  onRoute: (route: RouteResult) => void,
   onComplete: () => void,
   onError: (error: string) => void
 ): Promise<void> {
@@ -48,6 +49,13 @@ export async function startPipelineStream(
             onStep(step);
           } catch (e) {
             console.error('Failed to parse step:', e);
+          }
+        } else if (eventName === 'route-ready') {
+          try {
+            const route: RouteResult = JSON.parse(data);
+            onRoute(route);
+          } catch (e) {
+            console.error('Failed to parse route:', e);
           }
         } else if (eventName === 'pipeline-complete') {
           onComplete();
