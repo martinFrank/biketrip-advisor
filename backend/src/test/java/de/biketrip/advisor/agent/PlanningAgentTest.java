@@ -15,8 +15,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -36,7 +34,8 @@ class PlanningAgentTest {
     @BeforeEach
     void setUp() {
         OllamaModelsConfig config = new OllamaModelsConfig(
-                "http://localhost:11434", "mistral", "deepseek-r1:8b", "qwen2.5:7b", "llama3.1:8b");
+                "http://localhost:11434", "mistral", 0.7,
+                "deepseek-r1:8b", 0.2, "qwen2.5:7b", 0.4, "llama3.1:8b", 0.8);
         agent = new PlanningAgent(model, config);
     }
 

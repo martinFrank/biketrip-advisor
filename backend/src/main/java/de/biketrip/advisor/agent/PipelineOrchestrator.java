@@ -14,22 +14,14 @@ public class PipelineOrchestrator {
 
     private static final Logger log = LoggerFactory.getLogger(PipelineOrchestrator.class);
 
-    private final ChatAgent chatAgent;
-    private final ReasoningAgent reasoningAgent;
-    private final PlanningAgent planningAgent;
-    private final LanguageAgent languageAgent;
+    private final List<PipelineAgent> agents;
     private final GeoRoutingService geoRoutingService;
 
-    public PipelineOrchestrator(ChatAgent chatAgent,
-                                 ReasoningAgent reasoningAgent,
-                                 PlanningAgent planningAgent,
-                                 LanguageAgent languageAgent,
-                                 GeoRoutingService geoRoutingService) {
-        this.chatAgent = chatAgent;
-        this.reasoningAgent = reasoningAgent;
-        this.planningAgent = planningAgent;
-        this.languageAgent = languageAgent;
+    public PipelineOrchestrator(List<PipelineAgent> agents, GeoRoutingService geoRoutingService) {
+        this.agents = agents;
         this.geoRoutingService = geoRoutingService;
+        log.info("Pipeline configured with agents: {}",
+                agents.stream().map(a -> a.getRole().name()).toList());
     }
 
     public PipelineResult execute(String userMessage, Map<String, String> modelOverrides) {
@@ -41,40 +33,38 @@ public class PipelineOrchestrator {
                                    Consumer<RouteResult> onRouteReady) {
         log.info("Pipeline: starting for message: {}", userMessage);
         List<AgentStepResult> steps = new ArrayList<>();
-
-        // Stage 1: Chat with RAG
-        AgentStepResult chatResult = chatAgent.process(userMessage, getOverride(modelOverrides, "CHAT"));
-        steps.add(chatResult);
-        onStepComplete.accept(chatResult);
-
-        // Stage 2: Reasoning
-        AgentStepResult reasonResult = reasoningAgent.process(chatResult.output(), getOverride(modelOverrides, "REASONING"));
-        steps.add(reasonResult);
-        onStepComplete.accept(reasonResult);
-
-        // Stage 3: Planning
-        AgentStepResult planResult = planningAgent.process(reasonResult.output(), getOverride(modelOverrides, "PLANNING"));
-        steps.add(planResult);
-        onStepComplete.accept(planResult);
-
-        // Stage 3.5: Geo-Routing (between Planning and Language)
         RouteResult route = null;
+        String currentInput = userMessage;
+
+        for (PipelineAgent agent : agents) {
+            // Run geo-routing after planning, before subsequent agents
+            if (agent.getRole() == AgentRole.LANGUAGE && !steps.isEmpty()) {
+                route = runGeoRouting(currentInput, onRouteReady);
+            }
+
+            String override = getOverride(modelOverrides, agent.getRole().name());
+            AgentStepResult result = agent.process(currentInput, override);
+            steps.add(result);
+            onStepComplete.accept(result);
+            currentInput = result.output();
+        }
+
+        String finalReport = steps.isEmpty() ? "" : steps.getLast().output();
+        log.info("Pipeline: completed all stages");
+        return new PipelineResult(steps, finalReport, route);
+    }
+
+    private RouteResult runGeoRouting(String planningOutput, Consumer<RouteResult> onRouteReady) {
         try {
-            route = geoRoutingService.process(planResult.output());
+            RouteResult route = geoRoutingService.process(planningOutput);
             if (route != null) {
                 onRouteReady.accept(route);
             }
+            return route;
         } catch (Exception e) {
             log.warn("Geo-routing failed, continuing without route: {}", e.getMessage());
+            return null;
         }
-
-        // Stage 4: Language
-        AgentStepResult langResult = languageAgent.process(planResult.output(), getOverride(modelOverrides, "LANGUAGE"));
-        steps.add(langResult);
-        onStepComplete.accept(langResult);
-
-        log.info("Pipeline: completed all stages");
-        return new PipelineResult(steps, langResult.output(), route);
     }
 
     private String getOverride(Map<String, String> overrides, String role) {

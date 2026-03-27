@@ -2,6 +2,7 @@ package de.biketrip.advisor.agent;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.biketrip.advisor.config.NominatimConfig;
 import de.biketrip.advisor.config.RoutingConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +31,29 @@ public class GeoRoutingService {
     private final RestClient orsClient;
     private final ObjectMapper objectMapper;
 
-    public GeoRoutingService(RoutingConfig config, ObjectMapper objectMapper) {
+    public GeoRoutingService(RoutingConfig routingConfig,
+                             NominatimConfig nominatimConfig,
+                             ObjectMapper objectMapper) {
+        this(routingConfig,
+             RestClient.builder()
+                     .baseUrl(nominatimConfig.baseUrl())
+                     .defaultHeader("User-Agent", "BikeTripAdvisor/1.0")
+                     .build(),
+             RestClient.builder()
+                     .baseUrl(routingConfig.baseUrl())
+                     .build(),
+             objectMapper);
+    }
+
+    // Test-friendly constructor with injectable RestClients
+    GeoRoutingService(RoutingConfig config,
+                      RestClient nominatimClient,
+                      RestClient orsClient,
+                      ObjectMapper objectMapper) {
         this.config = config;
+        this.nominatimClient = nominatimClient;
+        this.orsClient = orsClient;
         this.objectMapper = objectMapper;
-        this.nominatimClient = RestClient.builder()
-                .baseUrl("https://nominatim.openstreetmap.org")
-                .defaultHeader("User-Agent", "BikeTripAdvisor/1.0")
-                .build();
-        this.orsClient = RestClient.builder()
-                .baseUrl(config.baseUrl())
-                .build();
     }
 
     public RouteResult process(String planningOutput) {
@@ -67,14 +81,12 @@ public class GeoRoutingService {
     List<String> extractLocations(String text) {
         LinkedHashSet<String> locations = new LinkedHashSet<>();
         Matcher matcher = ROUTE_PATTERN.matcher(text);
-        int day = 1;
 
         while (matcher.find()) {
             String start = cleanLocationName(matcher.group(1));
             String end = cleanLocationName(matcher.group(2));
             if (!start.isBlank()) locations.add(start);
             if (!end.isBlank()) locations.add(end);
-            day++;
         }
 
         return new ArrayList<>(locations);
@@ -117,10 +129,14 @@ public class GeoRoutingService {
                     double lat = Double.parseDouble(result.get("lat").toString());
                     double lon = Double.parseDouble(result.get("lon").toString());
                     waypoints.add(new RouteWaypoint(name, lat, lon, i + 1));
-                    log.debug("Geocoded '{}' → [{}, {}]", name, lat, lon);
+                    log.debug("Geocoded '{}' -> [{}, {}]", name, lat, lon);
                 } else {
                     log.warn("Geocoding failed for '{}'", name);
                 }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.warn("Geocoding interrupted for '{}'", name);
+                break;
             } catch (Exception e) {
                 log.warn("Geocoding error for '{}': {}", name, e.getMessage());
             }
@@ -163,19 +179,19 @@ public class GeoRoutingService {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private double extractTotalDistance(Map<String, Object> geojson) {
         try {
-            List<Map<String, Object>> features = (List<Map<String, Object>>) geojson.get("features");
-            if (features != null && !features.isEmpty()) {
-                Map<String, Object> properties = (Map<String, Object>) features.getFirst().get("properties");
-                Map<String, Object> summary = (Map<String, Object>) properties.get("summary");
-                Number distance = (Number) summary.get("distance");
-                return distance.doubleValue() / 1000.0;
+            if (!(geojson.get("features") instanceof List<?> featuresList) || featuresList.isEmpty()) {
+                return 0;
             }
+            if (!(featuresList.getFirst() instanceof Map<?, ?> feature)) return 0;
+            if (!(feature.get("properties") instanceof Map<?, ?> properties)) return 0;
+            if (!(properties.get("summary") instanceof Map<?, ?> summary)) return 0;
+            if (!(summary.get("distance") instanceof Number distance)) return 0;
+            return distance.doubleValue() / 1000.0;
         } catch (Exception e) {
             log.debug("Could not extract distance from GeoJSON: {}", e.getMessage());
+            return 0;
         }
-        return 0;
     }
 }

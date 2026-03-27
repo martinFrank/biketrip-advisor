@@ -63,9 +63,9 @@ export function RouteMap({ route }: Props) {
 
           <FitBounds route={route} />
 
-          {route.geojson && (
+          {route.geojson != null && 'type' in route.geojson && (
             <GeoJSON
-              data={route.geojson as GeoJSON.GeoJsonObject}
+              data={route.geojson}
               style={{ color: '#2563eb', weight: 4, opacity: 0.8 }}
             />
           )}

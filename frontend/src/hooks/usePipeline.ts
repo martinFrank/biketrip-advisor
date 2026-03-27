@@ -5,7 +5,6 @@ import type { AgentStepResult, PipelineState, RouteResult } from '../types/pipel
 const INITIAL_STATE: PipelineState = {
   status: 'idle',
   steps: [],
-  currentStep: -1,
   route: null,
   error: null,
 };
@@ -14,7 +13,7 @@ export function usePipeline() {
   const [state, setState] = useState<PipelineState>(INITIAL_STATE);
 
   const run = useCallback(async (userMessage: string, modelOverrides?: Record<string, string>) => {
-    setState({ status: 'running', steps: [], currentStep: 0, route: null, error: null });
+    setState({ status: 'running', steps: [], route: null, error: null });
 
     try {
       await startPipelineStream(
@@ -23,7 +22,6 @@ export function usePipeline() {
           setState(prev => ({
             ...prev,
             steps: [...prev.steps, step],
-            currentStep: prev.currentStep + 1,
           }));
         },
         (route: RouteResult) => {

@@ -6,6 +6,7 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import de.biketrip.advisor.config.NominatimConfig;
 import de.biketrip.advisor.config.OllamaModelsConfig;
 import de.biketrip.advisor.config.RoutingConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,18 +36,21 @@ class PipelineOrchestratorTest {
     @BeforeEach
     void setUp() {
         OllamaModelsConfig config = new OllamaModelsConfig(
-                "http://localhost:11434", "mistral", "deepseek-r1:8b", "qwen2.5:7b", "llama3.1:8b");
+                "http://localhost:11434", "mistral", 0.7,
+                "deepseek-r1:8b", 0.2, "qwen2.5:7b", 0.4, "llama3.1:8b", 0.8);
 
-        ChatAgent chatAgent = new ChatAgent(chatLlm, contentRetriever, config);
-        ReasoningAgent reasoningAgent = new ReasoningAgent(reasoningLlm, config);
-        PlanningAgent planningAgent = new PlanningAgent(planningLlm, config);
-        LanguageAgent languageAgent = new LanguageAgent(languageLlm, config);
+        List<PipelineAgent> agents = List.of(
+                new ChatAgent(chatLlm, contentRetriever, config),
+                new ReasoningAgent(reasoningLlm, config),
+                new PlanningAgent(planningLlm, config),
+                new LanguageAgent(languageLlm, config)
+        );
 
         RoutingConfig routingConfig = new RoutingConfig("", "https://api.openrouteservice.org");
-        GeoRoutingService geoRoutingService = new GeoRoutingService(routingConfig, new ObjectMapper());
+        NominatimConfig nominatimConfig = new NominatimConfig("https://nominatim.openstreetmap.org");
+        GeoRoutingService geoRoutingService = new GeoRoutingService(routingConfig, nominatimConfig, new ObjectMapper());
 
-        orchestrator = new PipelineOrchestrator(
-                chatAgent, reasoningAgent, planningAgent, languageAgent, geoRoutingService);
+        orchestrator = new PipelineOrchestrator(agents, geoRoutingService);
     }
 
     @Test
@@ -85,7 +89,6 @@ class PipelineOrchestratorTest {
 
         PipelineResult result = orchestrator.execute("Start", null);
 
-        // Chat gets user input, each subsequent step gets the previous step's output
         assertThat(result.steps().get(0).input()).isEqualTo("Start");
         assertThat(result.steps().get(1).input()).isEqualTo("chat-result");
         assertThat(result.steps().get(2).input()).isEqualTo("reasoning-result");

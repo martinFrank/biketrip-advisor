@@ -71,6 +71,7 @@ export async function startPipelineStream(
 export async function fetchModels(): Promise<string[]> {
   try {
     const response = await fetch(`${API_BASE}/models`);
+    if (!response.ok) return [];
     const data = await response.json();
     return (data.models || []).map((m: { name: string }) => m.name);
   } catch {
@@ -81,6 +82,7 @@ export async function fetchModels(): Promise<string[]> {
 export async function fetchConfig(): Promise<Record<string, string>> {
   try {
     const response = await fetch(`${API_BASE}/config`);
+    if (!response.ok) return {};
     return await response.json();
   } catch {
     return {};

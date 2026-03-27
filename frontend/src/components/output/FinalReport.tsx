@@ -14,7 +14,7 @@ export function FinalReport({ content }: Props) {
         <h2 className="text-lg font-bold text-green-800">Dein Reisebericht</h2>
       </div>
       <div className="prose prose-sm max-w-none px-6 py-4">
-        <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+        <Markdown remarkPlugins={[remarkGfm]} skipHtml>{content}</Markdown>
       </div>
     </div>
   );

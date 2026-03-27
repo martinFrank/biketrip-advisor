@@ -30,26 +30,32 @@ export function ModelSelector({ overrides, onChange, disabled }: Props) {
 
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-      {AGENT_ROLES.map(({ role, label }) => (
-        <div key={role}>
-          <label className="mb-1 block text-xs font-medium text-gray-500">{label}</label>
-          <select
-            value={overrides[role] || defaults[role] || ''}
-            onChange={e => handleChange(role, e.target.value)}
-            disabled={disabled || models.length === 0}
-            className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50"
-          >
-            {models.length === 0 && defaults[role] && (
-              <option value={defaults[role]}>{defaults[role]}</option>
-            )}
-            {models.map(m => (
-              <option key={m} value={m}>
-                {m} {m === defaults[role] ? '(default)' : ''}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
+      {AGENT_ROLES.map(({ role, label }) => {
+        const selectId = `model-${role.toLowerCase()}`;
+        return (
+          <div key={role}>
+            <label htmlFor={selectId} className="mb-1 block text-xs font-medium text-gray-500">
+              {label}
+            </label>
+            <select
+              id={selectId}
+              value={overrides[role] || defaults[role] || ''}
+              onChange={e => handleChange(role, e.target.value)}
+              disabled={disabled || models.length === 0}
+              className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50"
+            >
+              {models.length === 0 && defaults[role] && (
+                <option value={defaults[role]}>{defaults[role]}</option>
+              )}
+              {models.map(m => (
+                <option key={m} value={m}>
+                  {m} {m === defaults[role] ? '(default)' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+        );
+      })}
     </div>
   );
 }

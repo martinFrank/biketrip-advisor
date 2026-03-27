@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.biketrip.advisor.agent.PipelineOrchestrator;
 import de.biketrip.advisor.agent.PipelineResult;
 import de.biketrip.advisor.config.OllamaModelsConfig;
+import jakarta.annotation.PreDestroy;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
@@ -36,9 +38,22 @@ public class PipelineController {
         this.objectMapper = objectMapper;
     }
 
+    @PreDestroy
+    void shutdown() {
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
+
     @PostMapping("/pipeline/run")
     public PipelineResult run(@Valid @RequestBody PipelineRequest request) {
-        return orchestrator.execute(request.userMessage(), request.modelOverrides());
+        return orchestrator.execute(request.userMessage(), request.validatedOverrides());
     }
 
     @PostMapping("/pipeline/run-streaming")
@@ -47,13 +62,13 @@ public class PipelineController {
 
         executor.submit(() -> {
             try {
-                orchestrator.execute(request.userMessage(), request.modelOverrides(), step -> {
+                orchestrator.execute(request.userMessage(), request.validatedOverrides(), step -> {
                     try {
                         emitter.send(SseEmitter.event()
                                 .name("step-complete")
                                 .data(objectMapper.writeValueAsString(step), MediaType.APPLICATION_JSON));
                     } catch (Exception e) {
-                        log.error("Error sending SSE event", e);
+                        log.error("Error sending SSE step event: {}", e.getMessage());
                     }
                 }, route -> {
                     try {
@@ -61,7 +76,7 @@ public class PipelineController {
                                 .name("route-ready")
                                 .data(objectMapper.writeValueAsString(route), MediaType.APPLICATION_JSON));
                     } catch (Exception e) {
-                        log.error("Error sending route SSE event", e);
+                        log.error("Error sending SSE route event: {}", e.getMessage());
                     }
                 });
                 emitter.send(SseEmitter.event().name("pipeline-complete").data("done"));
@@ -70,7 +85,9 @@ public class PipelineController {
                 log.error("Pipeline execution failed", e);
                 try {
                     emitter.send(SseEmitter.event().name("error").data(e.getMessage()));
-                } catch (Exception ignored) {}
+                } catch (Exception sendError) {
+                    log.error("Failed to send error event to client: {}", sendError.getMessage());
+                }
                 emitter.completeWithError(e);
             }
         });
@@ -88,9 +105,9 @@ public class PipelineController {
                     .body(String.class);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            log.error("Failed to fetch Ollama models", e);
+            log.error("Failed to fetch Ollama models: {}", e.getMessage());
             return ResponseEntity.internalServerError()
-                    .body("{\"error\": \"Ollama not reachable at " + config.baseUrl() + "\"}");
+                    .body("{\"error\": \"Ollama service is not reachable\"}");
         }
     }
 

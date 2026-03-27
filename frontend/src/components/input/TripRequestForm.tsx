@@ -19,11 +19,16 @@ export function TripRequestForm({ onSubmit, disabled }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
+      <label htmlFor="trip-request" className="block text-sm font-medium text-gray-700">
+        Beschreibe deine Radtour-Wünsche
+      </label>
       <textarea
+        id="trip-request"
         value={message}
         onChange={e => setMessage(e.target.value)}
         placeholder="Beschreibe deine Radtour-Wünsche..."
         rows={4}
+        maxLength={5000}
         disabled={disabled}
         className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-50"
       />

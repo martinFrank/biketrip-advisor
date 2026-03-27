@@ -11,12 +11,20 @@ biketrip:
   ollama:
     base-url: http://localhost:11434
     chat-model: mistral
+    chat-temperature: 0.7
     reasoning-model: deepseek-r1:8b
+    reasoning-temperature: 0.2
     planning-model: qwen2.5:7b
+    planning-temperature: 0.4
     language-model: llama3.1:8b
+    language-temperature: 0.8
   openrouteservice:
     api-key: ${OPENROUTESERVICE_API_KEY:}
     base-url: https://api.openrouteservice.org
+  nominatim:
+    base-url: https://nominatim.openstreetmap.org
+  cors:
+    allowed-origins: http://localhost:5173
 
 logging:
   level:
