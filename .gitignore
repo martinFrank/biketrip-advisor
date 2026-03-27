@@ -1,3 +1,16 @@
-#tbd
-
+# Environment
 .env
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+backend/target/
+frontend/node_modules/
+frontend/dist/
