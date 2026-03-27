@@ -1,18 +1,27 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git:*)",
-      "Bash(mvn compile:*)",
-      "Bash(where mvn:*)",
+      "Bash(git *)",
+      "Bash(mvn compile *)",
+      "Bash(where mvn *)",
       "Read(//c/Program Files/**)",
       "Read(//c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/$HOME/.sdkman/candidates/maven/current/bin/**)",
       "Bash(cmd.exe /c \"where mvn\")",
       "Bash(ls C:/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/mvnw*)",
       "Read(//c/Users/m.frank/**)",
-      "Bash(npm create:*)",
-      "Bash(npm install:*)",
-      "Bash(npx tsc:*)",
-      "Bash(npx vite:*)"
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vite *)",
+      "Bash(mvn test *)",
+      "Bash(./mvnw test *)",
+      "Bash(cmd.exe /c \"cd /d C:\\\\Users\\\\m.frank\\\\IdeaProjects\\\\privat\\\\biketrip-advisor\\\\backend && mvn test\")",
+      "Bash(cmd.exe /c \"cd /d C:\\\\\\\\Users\\\\\\\\m.frank\\\\\\\\IdeaProjects\\\\\\\\privat\\\\\\\\biketrip-advisor\\\\\\\\backend && mvn test 2>&1\")",
+      "Bash(export 'PATH=$PATH:/c/Program Files/Apache/maven/bin:/c/apache-maven/bin:/c/tools/apache-maven/bin')",
+      "Bash(where.exe mvn *)",
+      "Bash(\"/c/Users/m.frank/work/apache-maven-3.9.6-bin/apache-maven-3.9.6/bin/mvn\" test:*)",
+      "Bash(java *)",
+      "Bash(\"/c/Users/m.frank/work/apache-maven-3.9.6-bin/apache-maven-3.9.6/bin/mvn\" -version)"
     ]
   }
 }
