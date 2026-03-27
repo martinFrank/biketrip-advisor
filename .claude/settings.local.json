@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(mvn compile:*)",
+      "Bash(where mvn:*)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/$HOME/.sdkman/candidates/maven/current/bin/**)",
+      "Bash(cmd.exe /c \"where mvn\")",
+      "Bash(ls C:/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/mvnw*)",
+      "Read(//c/Users/m.frank/**)",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)"
+    ]
+  }
+}
