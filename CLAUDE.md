@@ -77,7 +77,7 @@ User Request → [Chat+RAG] → [Reasoning] → [Planning] → [Geo-Routing] →
 ```bash
 docker compose up --build    # Build and start both services
 ```
-App available at http://localhost:3000. Ollama must be running on the host.
+App available at http://localhost:3000/biketrip-advisor/. Ollama must be running on the host.
 
 ### API Base URL
 All backend endpoints live under the context path `/biketrip-advisor/` (e.g. `/biketrip-advisor/api/pipeline/run`). The frontend API base is configurable via `VITE_API_BASE`:

@@ -45,7 +45,10 @@
       "Bash(find C:Usersm.frankIdeaProjectsprivatbiketrip-advisorbackendsrcmainresources -name application*.yml -o -name logback*.xml)",
       "Bash(xargs grep:*)",
       "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" compile test-compile)",
-      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" test)"
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" test)",
+      "Bash(docker compose:*)",
+      "Bash(find /c/Users/m.frank/IdeaProjects/privat/biketrip-advisor -name *nginx* -o -name *docker-compose*)",
+      "Bash(jar tf:*)"
     ]
   }
 }

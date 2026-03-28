@@ -57,7 +57,7 @@ biketrip:
       - qwen3.5:9b
       - qwen3.5:27b
   cors:
-    allowed-origins: http://localhost:5173,http://localhost:5174
+    allowed-origins: http://localhost:5173,http://localhost:5174,http://localhost:3000
 
 logging:
   level:

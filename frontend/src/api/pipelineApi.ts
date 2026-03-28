@@ -19,8 +19,18 @@ export async function startPipelineStream(
   });
 
   if (!response.ok) {
-    console.error('[API] Pipeline request failed with status:', response.status);
-    onError(`Server error: ${response.status}`);
+    if (response.status === 429) {
+      try {
+        const body = await response.json();
+        console.warn('[API] Pipeline busy:', body.error);
+        onError(body.error);
+      } catch {
+        onError('Ich bin noch am Denken... Bitte warte, bis die aktuelle Anfrage abgeschlossen ist.');
+      }
+    } else {
+      console.error('[API] Pipeline request failed with status:', response.status);
+      onError(`Server error: ${response.status}`);
+    }
     return;
   }
 
@@ -39,39 +49,51 @@ export async function startPipelineStream(
     if (done) break;
 
     buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop() || '';
 
-    let eventName = '';
-    for (const line of lines) {
-      if (line.startsWith('event:')) {
-        eventName = line.slice(6).trim();
-      } else if (line.startsWith('data:')) {
-        const data = line.slice(5).trim();
-        if (eventName === 'step-complete') {
-          try {
-            const step: AgentStepResult = JSON.parse(data);
-            console.log(`[API] Step complete: ${step.role} (${step.modelUsed}) in ${step.durationMs}ms`);
-            onStep(step);
-          } catch (e) {
-            console.error('[API] Failed to parse step event:', e);
-          }
-        } else if (eventName === 'route-ready') {
-          try {
-            const route: RouteResult = JSON.parse(data);
-            console.log(`[API] Route ready: ${route.waypoints.length} waypoints, ${route.totalDistanceKm.toFixed(1)} km`);
-            onRoute(route);
-          } catch (e) {
-            console.error('[API] Failed to parse route event:', e);
-          }
-        } else if (eventName === 'pipeline-complete') {
-          console.log('[API] Pipeline complete');
-          onComplete();
-        } else if (eventName === 'error') {
-          console.error('[API] Pipeline error:', data);
-          onError(data);
+    // SSE events are separated by double newlines
+    const events = buffer.split('\n\n');
+    // Last element is either empty or an incomplete event
+    buffer = events.pop() || '';
+
+    for (const eventBlock of events) {
+      if (!eventBlock.trim()) continue;
+
+      let eventName = '';
+      let data = '';
+
+      for (const line of eventBlock.split('\n')) {
+        if (line.startsWith('event:')) {
+          eventName = line.slice(6).trim();
+        } else if (line.startsWith('data:')) {
+          data = line.slice(5).trim();
         }
-        eventName = '';
+        // SSE comments (lines starting with ':') are silently ignored
+      }
+
+      if (!eventName || !data) continue;
+
+      if (eventName === 'step-complete') {
+        try {
+          const step: AgentStepResult = JSON.parse(data);
+          console.log(`[API] Step complete: ${step.role} (${step.modelUsed}) in ${step.durationMs}ms`);
+          onStep(step);
+        } catch (e) {
+          console.error('[API] Failed to parse step event:', e);
+        }
+      } else if (eventName === 'route-ready') {
+        try {
+          const route: RouteResult = JSON.parse(data);
+          console.log(`[API] Route ready: ${route.waypoints.length} waypoints, ${route.totalDistanceKm.toFixed(1)} km`);
+          onRoute(route);
+        } catch (e) {
+          console.error('[API] Failed to parse route event:', e);
+        }
+      } else if (eventName === 'pipeline-complete') {
+        console.log('[API] Pipeline complete');
+        onComplete();
+      } else if (eventName === 'error') {
+        console.error('[API] Pipeline error:', data);
+        onError(data);
       }
     }
   }

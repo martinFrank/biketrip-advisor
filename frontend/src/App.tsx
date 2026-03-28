@@ -6,9 +6,24 @@ import { FinalReport } from './components/output/FinalReport';
 import { RouteMap } from './components/output/RouteMap';
 import { usePipeline } from './hooks/usePipeline';
 
+const OVERRIDES_KEY = 'biketrip-overrides';
+
 function App() {
   const { state, run, reset } = usePipeline();
-  const [modelOverrides, setModelOverrides] = useState<Record<string, string>>({});
+  const [modelOverrides, setModelOverrides] = useState<Record<string, string>>(
+    () => {
+      try {
+        return JSON.parse(sessionStorage.getItem(OVERRIDES_KEY) ?? '{}');
+      } catch {
+        return {};
+      }
+    }
+  );
+
+  const updateOverrides = (overrides: Record<string, string>) => {
+    setModelOverrides(overrides);
+    sessionStorage.setItem(OVERRIDES_KEY, JSON.stringify(overrides));
+  };
 
   const handleSubmit = (message: string) => {
     run(message, Object.keys(modelOverrides).length > 0 ? modelOverrides : undefined);
@@ -35,7 +50,7 @@ function App() {
           <h2 className="mb-3 text-sm font-semibold text-gray-700">Modell-Konfiguration</h2>
           <ModelSelector
             overrides={modelOverrides}
-            onChange={setModelOverrides}
+            onChange={updateOverrides}
             disabled={state.status === 'running'}
           />
         </section>
