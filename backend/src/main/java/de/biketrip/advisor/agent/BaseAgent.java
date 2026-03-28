@@ -42,22 +42,36 @@ public abstract class BaseAgent implements PipelineAgent {
 
     @Override
     public AgentStepResult process(String input, String modelOverride) {
-        log.info("{}: processing", getRole().getDisplayName());
-
         ChatLanguageModel model = resolveModel(modelOverride);
         String modelName = (modelOverride != null && !modelOverride.isBlank()) ? modelOverride : defaultModelName;
 
+        log.info("{}: starting with model={}, temperature={}, input length={} chars",
+                getRole().getDisplayName(), modelName, temperature, input.length());
+        if (modelOverride != null && !modelOverride.isBlank()) {
+            log.info("{}: using override model '{}' instead of default '{}'",
+                    getRole().getDisplayName(), modelOverride, defaultModelName);
+        }
+
         String userMessage = prepareInput(input);
+        log.debug("{}: prepared input length={} chars", getRole().getDisplayName(), userMessage.length());
 
         long start = System.currentTimeMillis();
-        AiMessage response = model.generate(
-                SystemMessage.from(systemPrompt),
-                UserMessage.from(userMessage)
-        ).content();
-        long duration = System.currentTimeMillis() - start;
+        try {
+            AiMessage response = model.generate(
+                    SystemMessage.from(systemPrompt),
+                    UserMessage.from(userMessage)
+            ).content();
+            long duration = System.currentTimeMillis() - start;
 
-        log.info("{}: completed in {}ms", getRole().getDisplayName(), duration);
-        return new AgentStepResult(getRole(), modelName, input, response.text(), duration);
+            log.info("{}: completed in {}ms, output length={} chars",
+                    getRole().getDisplayName(), duration, response.text().length());
+            return new AgentStepResult(getRole(), modelName, input, response.text(), duration);
+        } catch (Exception e) {
+            long duration = System.currentTimeMillis() - start;
+            log.error("{}: failed after {}ms with model={}: {}",
+                    getRole().getDisplayName(), duration, modelName, e.getMessage(), e);
+            throw e;
+        }
     }
 
     /**

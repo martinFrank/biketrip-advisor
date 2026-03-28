@@ -9,8 +9,8 @@ spring:
 
 biketrip:
   ollama:
-    base-url: http://localhost:11434
-    chat-model: mistral
+    base-url: http://192.168.0.251:11434
+    chat-model: mistral:7b
     chat-temperature: 0.7
     reasoning-model: deepseek-r1:8b
     reasoning-temperature: 0.2
@@ -18,13 +18,46 @@ biketrip:
     planning-temperature: 0.4
     language-model: llama3.1:8b
     language-temperature: 0.8
+    embedding-model: nomic-embed-text
   openrouteservice:
     api-key: ${OPENROUTESERVICE_API_KEY:}
     base-url: https://api.openrouteservice.org
   nominatim:
     base-url: https://nominatim.openstreetmap.org
+  model-categories:
+    chat:
+      - mistral:7b
+      - llama3.1:8b
+      - llama4:latest
+      - qwen3:8b
+      - qwen3:14b
+      - qwen3.5:9b
+      - qwen3.5:27b
+    reasoning:
+      - deepseek-r1:7b
+      - deepseek-r1:8b
+      - deepseek-r1:14b
+      - deepseek-r1:32b
+      - qwen3:30b
+      - qwen3:32b
+    planning:
+      - qwen2.5:7b
+      - qwen3:8b
+      - qwen3:14b
+      - qwen3:32b
+      - qwen3.5:9b
+      - qwen3.5:27b
+      - qwen3.5:35b
+    language:
+      - mistral:7b
+      - llama3.1:8b
+      - llama4:latest
+      - qwen3:8b
+      - qwen3:14b
+      - qwen3.5:9b
+      - qwen3.5:27b
   cors:
-    allowed-origins: http://localhost:5173
+    allowed-origins: http://localhost:5173,http://localhost:5174
 
 logging:
   level:

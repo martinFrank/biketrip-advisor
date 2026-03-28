@@ -24,7 +24,28 @@
       "Bash(\"/c/Users/m.frank/work/apache-maven-3.9.6-bin/apache-maven-3.9.6/bin/mvn\" -version)",
       "Bash(find /c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/frontend -type f -name *.ts -o -name *.tsx -o -name *.json -o -name Dockerfile -o -name *.conf -o -name .env*)",
       "Bash(npx vitest:*)",
-      "Bash(grep -E \"\\\\.\\(json|js|ts|tsx|css\\)$\")"
+      "Bash(grep -E \"\\\\.\\(json|js|ts|tsx|css\\)$\")",
+      "Bash(find C:/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/src/test -name \"*.java\" -exec basename {})",
+      "WebFetch(domain:192.168.0.251)",
+      "Bash(curl:*)",
+      "Bash(ls \"C:/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/\"mvn*)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f''''{m[\"\"name\"\"]:30s} {m[\"\"details\"\"][\"\"parameter_size\"\"]:>10s} {m[\"\"size\"\"]/1e9:.1f} GB''''\\) for m in data[''''models'''']]\")",
+      "Bash(cmd //c \"where mvn\")",
+      "Read(//c//**)",
+      "Read(//c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/$HOME/.m2/**)",
+      "Bash(echo PATH=$PATH)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" spring-boot:run)",
+      "Bash(npm run:*)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" clean spring-boot:run)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" clean spring-boot:run -DskipTests)",
+      "Bash(node -e \"let d='''''''';process.stdin.on\\(''''data'''',c=>d+=c\\);process.stdin.on\\(''''end'''',\\(\\)=>console.log\\(JSON.stringify\\(JSON.parse\\(d\\),null,2\\)\\)\\)\")",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //F //PID 41212)",
+      "Bash(taskkill //F //PID 29104)",
+      "Bash(find C:Usersm.frankIdeaProjectsprivatbiketrip-advisorbackendsrcmainresources -name application*.yml -o -name logback*.xml)",
+      "Bash(xargs grep:*)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" compile test-compile)",
+      "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" test)"
     ]
   }
 }

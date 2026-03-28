@@ -31,7 +31,9 @@ public class PipelineOrchestrator {
     public PipelineResult execute(String userMessage, Map<String, String> modelOverrides,
                                    Consumer<AgentStepResult> onStepComplete,
                                    Consumer<RouteResult> onRouteReady) {
-        log.info("Pipeline: starting for message: {}", userMessage);
+        log.info("Pipeline: starting for message ({} chars), overrides={}",
+                userMessage.length(), modelOverrides != null ? modelOverrides : "none");
+        long pipelineStart = System.currentTimeMillis();
         List<AgentStepResult> steps = new ArrayList<>();
         RouteResult route = null;
         String currentInput = userMessage;
@@ -49,8 +51,9 @@ public class PipelineOrchestrator {
             currentInput = result.output();
         }
 
+        long totalDuration = System.currentTimeMillis() - pipelineStart;
         String finalReport = steps.isEmpty() ? "" : steps.getLast().output();
-        log.info("Pipeline: completed all stages");
+        log.info("Pipeline: completed all {} stages in {}ms (total)", steps.size(), totalDuration);
         return new PipelineResult(steps, finalReport, route);
     }
 

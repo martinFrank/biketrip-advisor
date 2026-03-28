@@ -31,6 +31,7 @@ public class GeoRoutingService {
     private final RestClient orsClient;
     private final ObjectMapper objectMapper;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public GeoRoutingService(RoutingConfig routingConfig,
                              NominatimConfig nominatimConfig,
                              ObjectMapper objectMapper) {

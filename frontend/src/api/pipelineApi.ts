@@ -9,6 +9,9 @@ export async function startPipelineStream(
   onComplete: () => void,
   onError: (error: string) => void
 ): Promise<void> {
+  console.log('[API] Starting pipeline stream, message length:', request.userMessage.length,
+    'overrides:', request.modelOverrides ?? 'none');
+
   const response = await fetch(`${API_BASE}/pipeline/run-streaming`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -16,12 +19,14 @@ export async function startPipelineStream(
   });
 
   if (!response.ok) {
+    console.error('[API] Pipeline request failed with status:', response.status);
     onError(`Server error: ${response.status}`);
     return;
   }
 
   const reader = response.body?.getReader();
   if (!reader) {
+    console.error('[API] No response body in pipeline stream');
     onError('No response body');
     return;
   }
@@ -46,20 +51,24 @@ export async function startPipelineStream(
         if (eventName === 'step-complete') {
           try {
             const step: AgentStepResult = JSON.parse(data);
+            console.log(`[API] Step complete: ${step.role} (${step.modelUsed}) in ${step.durationMs}ms`);
             onStep(step);
           } catch (e) {
-            console.error('Failed to parse step:', e);
+            console.error('[API] Failed to parse step event:', e);
           }
         } else if (eventName === 'route-ready') {
           try {
             const route: RouteResult = JSON.parse(data);
+            console.log(`[API] Route ready: ${route.waypoints.length} waypoints, ${route.totalDistanceKm.toFixed(1)} km`);
             onRoute(route);
           } catch (e) {
-            console.error('Failed to parse route:', e);
+            console.error('[API] Failed to parse route event:', e);
           }
         } else if (eventName === 'pipeline-complete') {
+          console.log('[API] Pipeline complete');
           onComplete();
         } else if (eventName === 'error') {
+          console.error('[API] Pipeline error:', data);
           onError(data);
         }
         eventName = '';
@@ -71,20 +80,38 @@ export async function startPipelineStream(
 export async function fetchModels(): Promise<string[]> {
   try {
     const response = await fetch(`${API_BASE}/models`);
-    if (!response.ok) return [];
+    if (!response.ok) {
+      console.error('[API] Failed to fetch models, status:', response.status);
+      return [];
+    }
     const data = await response.json();
-    return (data.models || []).map((m: { name: string }) => m.name);
-  } catch {
+    const models = (data.models || []).map((m: { name: string }) => m.name);
+    console.log(`[API] Fetched ${models.length} available models`);
+    return models;
+  } catch (e) {
+    console.error('[API] Failed to fetch models:', e);
     return [];
   }
 }
 
-export async function fetchConfig(): Promise<Record<string, string>> {
+export interface AppConfig {
+  defaults: Record<string, string>;
+  categories: Record<string, string[]>;
+}
+
+export async function fetchConfig(): Promise<AppConfig> {
   try {
     const response = await fetch(`${API_BASE}/config`);
-    if (!response.ok) return {};
-    return await response.json();
-  } catch {
-    return {};
+    if (!response.ok) {
+      console.error('[API] Failed to fetch config, status:', response.status);
+      return { defaults: {}, categories: {} };
+    }
+    const config: AppConfig = await response.json();
+    console.log('[API] Fetched config: defaults:', config.defaults,
+      'categories:', Object.fromEntries(Object.entries(config.categories).map(([k, v]) => [k, v.length])));
+    return config;
+  } catch (e) {
+    console.error('[API] Failed to fetch config:', e);
+    return { defaults: {}, categories: {} };
   }
 }

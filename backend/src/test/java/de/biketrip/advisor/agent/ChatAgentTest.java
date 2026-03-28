@@ -43,7 +43,7 @@ class ChatAgentTest {
     void setUp() {
         OllamaModelsConfig config = new OllamaModelsConfig(
                 "http://localhost:11434", "mistral", 0.7,
-                "deepseek-r1:8b", 0.2, "qwen2.5:7b", 0.4, "llama3.1:8b", 0.8);
+                "deepseek-r1:8b", 0.2, "qwen2.5:7b", 0.4, "llama3.1:8b", 0.8, "nomic-embed-text");
         chatAgent = new ChatAgent(model, contentRetriever, config);
     }
 
