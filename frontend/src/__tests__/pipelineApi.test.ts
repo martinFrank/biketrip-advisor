@@ -197,7 +197,10 @@ describe('fetchModels', () => {
 
 describe('fetchConfig', () => {
   it('returns config from backend', async () => {
-    const config = { CHAT: 'mistral', REASONING: 'deepseek-r1:8b' };
+    const config = {
+      defaults: { CHAT: 'mistral', REASONING: 'deepseek-r1:8b' },
+      categories: { CHAT: ['mistral', 'llama3.1:8b'], REASONING: ['deepseek-r1:8b'] },
+    };
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(config),
@@ -207,10 +210,10 @@ describe('fetchConfig', () => {
     expect(result).toEqual(config);
   });
 
-  it('returns empty object on error', async () => {
+  it('returns empty defaults and categories on error', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('fail'));
 
     const result = await fetchConfig();
-    expect(result).toEqual({});
+    expect(result).toEqual({ defaults: {}, categories: {} });
   });
 });

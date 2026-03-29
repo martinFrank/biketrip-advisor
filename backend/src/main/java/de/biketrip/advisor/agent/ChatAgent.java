@@ -32,15 +32,20 @@ public class ChatAgent extends BaseAgent {
 
     @Override
     protected String prepareInput(String input) {
+        log.debug("RAG: retrieving context for query ({} chars)", input.length());
         List<Content> retrieved = contentRetriever.retrieve(new Query(input));
+        log.info("RAG: retrieved {} relevant segments", retrieved.size());
+
         String context = retrieved.stream()
                 .map(c -> c.textSegment().text())
                 .collect(Collectors.joining("\n\n"));
 
         if (context.isBlank()) {
+            log.info("RAG: no relevant context found, using raw input");
             return input;
         }
 
+        log.debug("RAG: context length={} chars", context.length());
         return """
                 ## Relevante Routeninformationen:
                 %s

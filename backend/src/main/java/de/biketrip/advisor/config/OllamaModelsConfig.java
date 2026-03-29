@@ -12,5 +12,6 @@ public record OllamaModelsConfig(
         String planningModel,
         double planningTemperature,
         String languageModel,
-        double languageTemperature
+        double languageTemperature,
+        String embeddingModel
 ) {}

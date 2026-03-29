@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { fetchConfig, fetchModels } from '../../api/pipelineApi';
+import { fetchConfig } from '../../api/pipelineApi';
+import type { AppConfig } from '../../api/pipelineApi';
 import { AGENT_ROLES } from '../../types/pipeline';
 import type { AgentRole } from '../../types/pipeline';
 
@@ -10,17 +11,15 @@ interface Props {
 }
 
 export function ModelSelector({ overrides, onChange, disabled }: Props) {
-  const [models, setModels] = useState<string[]>([]);
-  const [defaults, setDefaults] = useState<Record<string, string>>({});
+  const [config, setConfig] = useState<AppConfig>({ defaults: {}, categories: {} });
 
   useEffect(() => {
-    fetchModels().then(setModels);
-    fetchConfig().then(setDefaults);
+    fetchConfig().then(setConfig);
   }, []);
 
   const handleChange = (role: AgentRole, model: string) => {
     const next = { ...overrides };
-    if (model === '' || model === defaults[role]) {
+    if (model === '' || model === config.defaults[role]) {
       delete next[role];
     } else {
       next[role] = model;
@@ -32,6 +31,7 @@ export function ModelSelector({ overrides, onChange, disabled }: Props) {
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       {AGENT_ROLES.map(({ role, label }) => {
         const selectId = `model-${role.toLowerCase()}`;
+        const modelsForRole = config.categories[role] || [];
         return (
           <div key={role}>
             <label htmlFor={selectId} className="mb-1 block text-xs font-medium text-gray-500">
@@ -39,17 +39,17 @@ export function ModelSelector({ overrides, onChange, disabled }: Props) {
             </label>
             <select
               id={selectId}
-              value={overrides[role] || defaults[role] || ''}
+              value={overrides[role] || config.defaults[role] || ''}
               onChange={e => handleChange(role, e.target.value)}
-              disabled={disabled || models.length === 0}
+              disabled={disabled || modelsForRole.length === 0}
               className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50"
             >
-              {models.length === 0 && defaults[role] && (
-                <option value={defaults[role]}>{defaults[role]}</option>
+              {modelsForRole.length === 0 && config.defaults[role] && (
+                <option value={config.defaults[role]}>{config.defaults[role]}</option>
               )}
-              {models.map(m => (
+              {modelsForRole.map(m => (
                 <option key={m} value={m}>
-                  {m} {m === defaults[role] ? '(default)' : ''}
+                  {m} {m === config.defaults[role] ? '(default)' : ''}
                 </option>
               ))}
             </select>

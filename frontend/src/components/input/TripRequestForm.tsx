@@ -1,14 +1,22 @@
-import { FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 
 interface Props {
   onSubmit: (message: string) => void;
   disabled: boolean;
 }
 
+const STORAGE_KEY = 'biketrip-message';
+const DEFAULT_MESSAGE = 'Plane eine 5-tägige Radtour von Bad Säckingen nach Basel mit Sightseeing und Budget unter 500€';
+
 export function TripRequestForm({ onSubmit, disabled }: Props) {
   const [message, setMessage] = useState(
-    'Plane eine 5-tägige Radtour von Bad Säckingen nach Basel mit Sightseeing und Budget unter 500€'
+    () => sessionStorage.getItem(STORAGE_KEY) ?? DEFAULT_MESSAGE
   );
+
+  const updateMessage = (value: string) => {
+    setMessage(value);
+    sessionStorage.setItem(STORAGE_KEY, value);
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -25,7 +33,7 @@ export function TripRequestForm({ onSubmit, disabled }: Props) {
       <textarea
         id="trip-request"
         value={message}
-        onChange={e => setMessage(e.target.value)}
+        onChange={e => updateMessage(e.target.value)}
         placeholder="Beschreibe deine Radtour-Wünsche..."
         rows={4}
         maxLength={5000}

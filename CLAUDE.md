@@ -6,12 +6,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Biketrip Advisor — Multi-Agent LLM Showcase. A demo application that chains 4 specialized AI agents (Chat+RAG, Reasoning, Planning, Language) to create personalized bike trip plans. Each agent uses a different Ollama model to showcase LLM comparison.
 
+## LLM Host
+
+Ollama runs on a dedicated host at `192.168.0.251:11434` with the following hardware:
+- **CPU:** AMD Ryzen 7 9700X 8-Core Processor
+- **GPU:** NVIDIA RTX 4060 Ti 16GB VRAM
+- **RAM:** 96 GB DDR5 6000 MHz
+
 ## Build & Run Commands
 
 ### Prerequisites
 - Java 21+
 - Node.js 18+
-- Ollama running locally (`ollama serve`)
+- Ollama running on LLM host (`192.168.0.251:11434`)
 - Required models: `ollama pull mistral deepseek-r1:8b qwen2.5:7b llama3.1:8b`
 
 ### Backend (Spring Boot + LangChain4j)
@@ -70,7 +77,7 @@ User Request → [Chat+RAG] → [Reasoning] → [Planning] → [Geo-Routing] →
 ```bash
 docker compose up --build    # Build and start both services
 ```
-App available at http://localhost:3000. Ollama must be running on the host.
+App available at http://localhost:3000/biketrip-advisor/. Ollama must be running on the host.
 
 ### API Base URL
 All backend endpoints live under the context path `/biketrip-advisor/` (e.g. `/biketrip-advisor/api/pipeline/run`). The frontend API base is configurable via `VITE_API_BASE`:
