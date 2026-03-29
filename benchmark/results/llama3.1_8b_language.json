@@ -1,0 +1,10 @@
+{
+  "model": "llama3.1:8b",
+  "task": "language",
+  "wall_time_s": 17.2,
+  "total_duration_s": 17.2,
+  "output_tokens": 894,
+  "tokens_per_sec": 53.9,
+  "prompt_tokens": 886,
+  "word_count": 310
+}

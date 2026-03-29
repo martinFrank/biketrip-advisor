@@ -51,7 +51,16 @@
       "Bash(jar tf:*)",
       "Bash(wc *)",
       "Bash(wc:*)",
-      "Bash(find frontend/src/__tests__ -name *.ts)"
+      "Bash(find frontend/src/__tests__ -name *.ts)",
+      "Bash(npm test:*)",
+      "Bash(ls /c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/mvnw*)",
+      "Bash(ls \"/c/Program Files/JetBrains/\"*\"/plugins/maven/lib/maven3/bin/mvn\")",
+      "Bash(ls /c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/*.cmd)",
+      "Bash(\"/c/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn\" -f /c/Users/m.frank/IdeaProjects/privat/biketrip-advisor/backend/pom.xml test)",
+      "Bash(python -m json.tool)",
+      "Bash(bash benchmark/run_benchmark.sh 2>&1)",
+      "Bash(ls benchmark/results/*.txt)",
+      "Bash(node:*)"
     ]
   }
 }

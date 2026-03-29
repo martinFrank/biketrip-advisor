@@ -1,0 +1,10 @@
+{
+  "model": "qwen3:8b",
+  "task": "reasoning",
+  "wall_time_s": 46.4,
+  "total_duration_s": 46.4,
+  "output_tokens": 2224,
+  "tokens_per_sec": 49.9,
+  "prompt_tokens": 416,
+  "word_count": 513
+}

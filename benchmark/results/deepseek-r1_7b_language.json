@@ -1,0 +1,10 @@
+{
+  "model": "deepseek-r1:7b",
+  "task": "language",
+  "wall_time_s": 31.3,
+  "total_duration_s": 31.3,
+  "output_tokens": 1740,
+  "tokens_per_sec": 57.3,
+  "prompt_tokens": 904,
+  "word_count": 402
+}

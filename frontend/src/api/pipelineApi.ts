@@ -43,6 +43,7 @@ export async function startPipelineStream(
 
   const decoder = new TextDecoder();
   let buffer = '';
+  let completed = false;
 
   while (true) {
     const { done, value } = await reader.read();
@@ -90,12 +91,20 @@ export async function startPipelineStream(
         }
       } else if (eventName === 'pipeline-complete') {
         console.log('[API] Pipeline complete');
+        completed = true;
         onComplete();
       } else if (eventName === 'error') {
         console.error('[API] Pipeline error:', data);
+        completed = true;
         onError(data);
       }
     }
+  }
+
+  // Stream ended without a terminal event — server timeout or connection drop
+  if (!completed) {
+    console.error('[API] Stream ended unexpectedly without pipeline-complete or error event');
+    onError('Verbindung zum Server wurde unterbrochen. Bitte versuche es erneut.');
   }
 }
 

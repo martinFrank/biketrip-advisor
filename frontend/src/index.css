@@ -129,6 +129,7 @@ body {
 .transition-all { transition: all 0.2s ease; }
 
 .hover\:bg-blue-700:hover { background-color: #1d4ed8; }
+.hover\:bg-gray-50:hover { background-color: #f9fafb; }
 .hover\:text-blue-700:hover { color: #1d4ed8; }
 
 .focus\:border-blue-500:focus { border-color: #3b82f6; }
@@ -167,3 +168,55 @@ body {
 .prose strong { font-weight: 600; }
 .prose code { background-color: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
 .prose blockquote { border-left: 3px solid #d1d5db; padding-left: 1rem; color: #6b7280; margin: 0.75rem 0; }
+
+/* Print styles */
+@media print {
+  /* Hide everything except the printable report */
+  body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  header,
+  .print-hidden,
+  section:has(.grid-cols-4) { display: none !important; }
+
+  main > *:not(#printable-report) { display: none !important; }
+
+  #printable-report {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Report styling for print */
+  #printable-report .print-section {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  #printable-report .rounded-lg {
+    border: none;
+    box-shadow: none;
+  }
+
+  /* Map: fixed height, ensure tiles render */
+  #printable-report .leaflet-container {
+    height: 400px !important;
+    break-inside: avoid;
+  }
+
+  /* Hide Leaflet controls (zoom, attribution clutter) */
+  .leaflet-control-zoom,
+  .leaflet-control-attribution { display: none !important; }
+
+  /* Clean prose for print */
+  .prose { font-size: 11pt; line-height: 1.5; }
+  .prose h1 { font-size: 16pt; }
+  .prose h2 { font-size: 14pt; }
+  .prose h3 { font-size: 12pt; }
+  .prose table { font-size: 10pt; }
+  .prose th, .prose td { padding: 4px 8px; }
+
+  /* Page margins */
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+}
