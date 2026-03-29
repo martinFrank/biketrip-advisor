@@ -1,0 +1,10 @@
+{
+  "model": "mistral:7b",
+  "task": "reasoning",
+  "wall_time_s": 11.5,
+  "total_duration_s": 11.4,
+  "output_tokens": 599,
+  "tokens_per_sec": 58.7,
+  "prompt_tokens": 450,
+  "word_count": 235
+}

@@ -1,0 +1,10 @@
+{
+  "model": "deepseek-r1:8b",
+  "task": "planning",
+  "wall_time_s": 38.5,
+  "total_duration_s": 38.5,
+  "output_tokens": 1891,
+  "tokens_per_sec": 49.8,
+  "prompt_tokens": 661,
+  "word_count": 341
+}

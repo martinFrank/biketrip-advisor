@@ -4,6 +4,7 @@ import { ModelSelector } from './components/input/ModelSelector';
 import { PipelineView } from './components/pipeline/PipelineView';
 import { FinalReport } from './components/output/FinalReport';
 import { RouteMap } from './components/output/RouteMap';
+import { PrintButton } from './components/output/PrintButton';
 import { usePipeline } from './hooks/usePipeline';
 
 const OVERRIDES_KEY = 'biketrip-overrides';
@@ -80,16 +81,26 @@ function App() {
           </section>
         )}
 
-        {state.route && (
-          <section>
-            <RouteMap route={state.route} />
-          </section>
-        )}
+        {(state.route || finalReport) && (
+          <div id="printable-report">
+            {finalReport && (
+              <section className="print-section">
+                <FinalReport content={finalReport} />
+              </section>
+            )}
 
-        {finalReport && (
-          <section>
-            <FinalReport content={finalReport} />
-          </section>
+            {state.route && (
+              <section className="print-section">
+                <RouteMap route={state.route} />
+              </section>
+            )}
+
+            {finalReport && (
+              <div className="flex justify-end mt-1">
+                <PrintButton />
+              </div>
+            )}
+          </div>
         )}
 
         {state.status === 'complete' && state.steps.length > 0 && (

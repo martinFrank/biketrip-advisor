@@ -99,6 +99,17 @@ public class PipelineController {
                 request.userMessage().length(), request.validatedOverrides());
         SseEmitter emitter = new SseEmitter(300_000L); // 5 min timeout
 
+        emitter.onTimeout(() -> {
+            log.warn("SSE emitter timed out — releasing pipeline lock");
+            pipelineRunning.set(false);
+            emitter.complete();
+        });
+
+        emitter.onError(e -> {
+            log.warn("SSE emitter error (client disconnected?): {}", e.getMessage());
+            pipelineRunning.set(false);
+        });
+
         executor.submit(() -> {
             long start = System.currentTimeMillis();
             try {

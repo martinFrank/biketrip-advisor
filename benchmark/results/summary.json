@@ -1,0 +1,272 @@
+[
+  {
+    "model": "mistral:7b",
+    "task": "reasoning",
+    "wall_time_s": 11.5,
+    "total_duration_s": 11.4,
+    "output_tokens": 599,
+    "tokens_per_sec": 58.7,
+    "prompt_tokens": 450,
+    "word_count": 235
+  },
+  {
+    "model": "mistral:7b",
+    "task": "planning",
+    "wall_time_s": 16.7,
+    "total_duration_s": 16.7,
+    "output_tokens": 948,
+    "tokens_per_sec": 57.8,
+    "prompt_tokens": 745,
+    "word_count": 298
+  },
+  {
+    "model": "mistral:7b",
+    "task": "language",
+    "wall_time_s": 14.4,
+    "total_duration_s": 14.4,
+    "output_tokens": 804,
+    "tokens_per_sec": 57.5,
+    "prompt_tokens": 1009,
+    "word_count": 248
+  },
+  {
+    "model": "llama3.1:8b",
+    "task": "reasoning",
+    "wall_time_s": 14.8,
+    "total_duration_s": 14.8,
+    "output_tokens": 733,
+    "tokens_per_sec": 54.7,
+    "prompt_tokens": 405,
+    "word_count": 334
+  },
+  {
+    "model": "llama3.1:8b",
+    "task": "planning",
+    "wall_time_s": 13.1,
+    "total_duration_s": 13.1,
+    "output_tokens": 686,
+    "tokens_per_sec": 54.4,
+    "prompt_tokens": 653,
+    "word_count": 266
+  },
+  {
+    "model": "llama3.1:8b",
+    "task": "language",
+    "wall_time_s": 17.2,
+    "total_duration_s": 17.2,
+    "output_tokens": 894,
+    "tokens_per_sec": 53.9,
+    "prompt_tokens": 886,
+    "word_count": 310
+  },
+  {
+    "model": "qwen2.5:7b",
+    "task": "reasoning",
+    "wall_time_s": 21.9,
+    "total_duration_s": 21.9,
+    "output_tokens": 1147,
+    "tokens_per_sec": 58,
+    "prompt_tokens": 414,
+    "word_count": 433
+  },
+  {
+    "model": "qwen2.5:7b",
+    "task": "planning",
+    "wall_time_s": 16.2,
+    "total_duration_s": 16.2,
+    "output_tokens": 905,
+    "tokens_per_sec": 57.9,
+    "prompt_tokens": 672,
+    "word_count": 312
+  },
+  {
+    "model": "qwen2.5:7b",
+    "task": "language",
+    "wall_time_s": 20.7,
+    "total_duration_s": 20.7,
+    "output_tokens": 1148,
+    "tokens_per_sec": 57.5,
+    "prompt_tokens": 914,
+    "word_count": 442
+  },
+  {
+    "model": "deepseek-r1:7b",
+    "task": "reasoning",
+    "wall_time_s": 24,
+    "total_duration_s": 24,
+    "output_tokens": 1225,
+    "tokens_per_sec": 58,
+    "prompt_tokens": 404,
+    "word_count": 235
+  },
+  {
+    "model": "deepseek-r1:7b",
+    "task": "planning",
+    "wall_time_s": 21,
+    "total_duration_s": 21,
+    "output_tokens": 1177,
+    "tokens_per_sec": 57.7,
+    "prompt_tokens": 662,
+    "word_count": 233
+  },
+  {
+    "model": "deepseek-r1:7b",
+    "task": "language",
+    "wall_time_s": 31.3,
+    "total_duration_s": 31.3,
+    "output_tokens": 1740,
+    "tokens_per_sec": 57.3,
+    "prompt_tokens": 904,
+    "word_count": 402
+  },
+  {
+    "model": "deepseek-r1:8b",
+    "task": "reasoning",
+    "wall_time_s": 52.7,
+    "total_duration_s": 52.7,
+    "output_tokens": 2514,
+    "tokens_per_sec": 49.7,
+    "prompt_tokens": 403,
+    "word_count": 759
+  },
+  {
+    "model": "deepseek-r1:8b",
+    "task": "planning",
+    "wall_time_s": 38.5,
+    "total_duration_s": 38.5,
+    "output_tokens": 1891,
+    "tokens_per_sec": 49.8,
+    "prompt_tokens": 661,
+    "word_count": 341
+  },
+  {
+    "model": "deepseek-r1:8b",
+    "task": "language",
+    "wall_time_s": 37.9,
+    "total_duration_s": 37.9,
+    "output_tokens": 1843,
+    "tokens_per_sec": 49.4,
+    "prompt_tokens": 903,
+    "word_count": 651
+  },
+  {
+    "model": "deepseek-r1:14b",
+    "task": "reasoning",
+    "wall_time_s": 46,
+    "total_duration_s": 46,
+    "output_tokens": 1280,
+    "tokens_per_sec": 29.7,
+    "prompt_tokens": 404,
+    "word_count": 327
+  },
+  {
+    "model": "deepseek-r1:14b",
+    "task": "planning",
+    "wall_time_s": 52.9,
+    "total_duration_s": 52.9,
+    "output_tokens": 1526,
+    "tokens_per_sec": 29.4,
+    "prompt_tokens": 662,
+    "word_count": 325
+  },
+  {
+    "model": "deepseek-r1:14b",
+    "task": "language",
+    "wall_time_s": 46.9,
+    "total_duration_s": 46.9,
+    "output_tokens": 1343,
+    "tokens_per_sec": 29.3,
+    "prompt_tokens": 904,
+    "word_count": 481
+  },
+  {
+    "model": "qwen3:8b",
+    "task": "reasoning",
+    "wall_time_s": 46.4,
+    "total_duration_s": 46.4,
+    "output_tokens": 2224,
+    "tokens_per_sec": 49.9,
+    "prompt_tokens": 416,
+    "word_count": 513
+  },
+  {
+    "model": "qwen3:8b",
+    "task": "planning",
+    "wall_time_s": 34.4,
+    "total_duration_s": 34.4,
+    "output_tokens": 1692,
+    "tokens_per_sec": 49.9,
+    "prompt_tokens": 674,
+    "word_count": 376
+  },
+  {
+    "model": "qwen3:8b",
+    "task": "language",
+    "wall_time_s": 30.6,
+    "total_duration_s": 30.6,
+    "output_tokens": 1497,
+    "tokens_per_sec": 49.7,
+    "prompt_tokens": 916,
+    "word_count": 401
+  },
+  {
+    "model": "qwen3:14b",
+    "task": "reasoning",
+    "wall_time_s": 98.1,
+    "total_duration_s": 98.1,
+    "output_tokens": 2740,
+    "tokens_per_sec": 28.5,
+    "prompt_tokens": 416,
+    "word_count": 622
+  },
+  {
+    "model": "qwen3:14b",
+    "task": "planning",
+    "wall_time_s": 62.8,
+    "total_duration_s": 62.8,
+    "output_tokens": 1781,
+    "tokens_per_sec": 28.6,
+    "prompt_tokens": 674,
+    "word_count": 402
+  },
+  {
+    "model": "qwen3:14b",
+    "task": "language",
+    "wall_time_s": 60.4,
+    "total_duration_s": 60.6,
+    "output_tokens": 1706,
+    "tokens_per_sec": 28.5,
+    "prompt_tokens": 916,
+    "word_count": 427
+  },
+  {
+    "model": "qwen3.5:9b",
+    "task": "reasoning",
+    "wall_time_s": 107.7,
+    "total_duration_s": 107.7,
+    "output_tokens": 4550,
+    "tokens_per_sec": 43.7,
+    "prompt_tokens": 355,
+    "word_count": 1081
+  },
+  {
+    "model": "qwen3.5:9b",
+    "task": "planning",
+    "wall_time_s": 72.1,
+    "total_duration_s": 72,
+    "output_tokens": 3136,
+    "tokens_per_sec": 44.1,
+    "prompt_tokens": 606,
+    "word_count": 337
+  },
+  {
+    "model": "qwen3.5:9b",
+    "task": "language",
+    "wall_time_s": 57.9,
+    "total_duration_s": 57.9,
+    "output_tokens": 2513,
+    "tokens_per_sec": 44.1,
+    "prompt_tokens": 842,
+    "word_count": 675
+  }
+]

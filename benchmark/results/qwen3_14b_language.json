@@ -1,0 +1,10 @@
+{
+  "model": "qwen3:14b",
+  "task": "language",
+  "wall_time_s": 60.4,
+  "total_duration_s": 60.6,
+  "output_tokens": 1706,
+  "tokens_per_sec": 28.5,
+  "prompt_tokens": 916,
+  "word_count": 427
+}

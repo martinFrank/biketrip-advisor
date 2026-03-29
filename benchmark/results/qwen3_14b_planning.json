@@ -1,0 +1,10 @@
+{
+  "model": "qwen3:14b",
+  "task": "planning",
+  "wall_time_s": 62.8,
+  "total_duration_s": 62.8,
+  "output_tokens": 1781,
+  "tokens_per_sec": 28.6,
+  "prompt_tokens": 674,
+  "word_count": 402
+}
