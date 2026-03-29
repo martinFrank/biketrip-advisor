@@ -48,7 +48,10 @@
       "Bash(\"C:/Program Files/JetBrains/IntelliJ IDEA 2026.1/plugins/maven/lib/maven3/bin/mvn.cmd\" test)",
       "Bash(docker compose:*)",
       "Bash(find /c/Users/m.frank/IdeaProjects/privat/biketrip-advisor -name *nginx* -o -name *docker-compose*)",
-      "Bash(jar tf:*)"
+      "Bash(jar tf:*)",
+      "Bash(wc *)",
+      "Bash(wc:*)",
+      "Bash(find frontend/src/__tests__ -name *.ts)"
     ]
   }
 }
